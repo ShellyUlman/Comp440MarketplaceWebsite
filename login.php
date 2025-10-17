@@ -41,13 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 	$phone = trim($_POST['phone']);
 
 	// Validation
-	if ($password !== $confirm_password)
+	if ($password !== $confirm_password) // check if passwords match
 		$usernameExistsError = 'Passwords do not match.';
-	elseif (!preg_match("/^[a-zA-Z0-9_]{3,50}$/", $username))
+	elseif (!preg_match("/^[a-zA-Z0-9_]{3,50}$/", $username)) // validate username
 		$usernameExistsError = 'Invalid username.';
-	elseif (!filter_var($email, FILTER_VALIDATE_EMAIL))
+	elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) // validate email
 		$emailExistsError = 'Invalid email.';
-	elseif (!preg_match("/^[0-9+\- ]{7,20}$/", $phone))
+	elseif (!preg_match("/^[0-9+\- ]{7,20}$/", $phone)) // validate phone
 		$phoneExistsError = 'Invalid phone.';
 	else {
 		// Check duplicates
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-		if ($result->num_rows > 0) {
+		if ($result->num_rows > 0) { //duplicate info found in DB
 			while ($row = $result->fetch_assoc()) {
 				if ($row['username'] === $username)
 					$usernameExistsError = "Account with provided username already exists!";
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 				if ($row['phone'] === $phone)
 					$phoneExistsError = "Account with provided phone number already exists!";
 			}
-		} else {
+		} else { // insert new user
 			// Insert new user
 			$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 			$stmt = $UserDBConnect->prepare(
@@ -90,46 +90,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 }
 
 // Retrieve signup messages (get stage of PRG)
-if (isset($_SESSION['signupSuccess'])) {
+if (isset($_SESSION['signupSuccess'])) { //success message
 	$signupSuccess = $_SESSION['signupSuccess'];
 	unset($_SESSION['signupSuccess']);
 }
-if (isset($_SESSION['usernameExistsError'])) {
+if (isset($_SESSION['usernameExistsError'])) { // username error
 	$usernameExistsError = $_SESSION['usernameExistsError'];
 	unset($_SESSION['usernameExistsError']);
 }
-if (isset($_SESSION['emailExistsError'])) {
+if (isset($_SESSION['emailExistsError'])) { // email error
 	$emailExistsError = $_SESSION['emailExistsError'];
 	unset($_SESSION['emailExistsError']);
 }
-if (isset($_SESSION['phoneExistsError'])) {
+if (isset($_SESSION['phoneExistsError'])) { // phone error
 	$phoneExistsError = $_SESSION['phoneExistsError'];
 	unset($_SESSION['phoneExistsError']);
 }
 
 // -------- LOGIN LOGIC (PRG) --------
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) { //if login form submitted and method is POST
 	$username = trim($_POST['login_username']);
 	$password = $_POST['login_password'];
 	$loginError = '';
 
+	// Fetch user
 	$stmt = $UserDBConnect->prepare("SELECT password FROM Users WHERE username=?");
 	$stmt->bind_param("s", $username);
 	$stmt->execute();
 	$result = $stmt->get_result();
 
-	if ($row = $result->fetch_assoc()) {
-		if (password_verify($password, $row['password'])) {
+	// Verify credentials
+	if ($row = $result->fetch_assoc()) { // username found
+		if (password_verify($password, $row['password'])) { // valid password
 			$_SESSION['username'] = $username;
 			$_SESSION['login_attempts'] = 0;
 			header("Location: dashboard.php");
 			exit;
-		} else {
+		} else { // invalid password
 			$_SESSION['login_attempts']++;
 			$_SESSION['last_login_attempt'] = time();
 			$loginError = "Invalid password.";
 		}
-	} else {
+	} else { // invalid username
 		$_SESSION['login_attempts']++;
 		$_SESSION['last_login_attempt'] = time();
 		$loginError = "Invalid username.";
