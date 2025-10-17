@@ -24,10 +24,10 @@ if ($_SESSION['login_attempts'] >= $max_attempts && $stillLockedOut) {
 }
 
 // -------- ERROR MESSAGE VARIABLES --------
-$usernameExistsError = '';
-$emailExistsError = '';
-$phoneExistsError = '';
-$signupSuccess = '';
+$usernameError = '';
+$emailError = '';
+$phoneNumError = '';
+$signupStatus = '';
 $loginError = '';
 
 // -------- SIGNUP LOGIC (PRG) --------
@@ -42,13 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 
 	// Validation
 	if ($password !== $confirm_password) // check if passwords match
-		$usernameExistsError = 'Passwords do not match.';
+		$usernameError = 'Passwords do not match.';
 	elseif (!preg_match("/^[a-zA-Z0-9_]{3,50}$/", $username)) // validate username
-		$usernameExistsError = 'Invalid username.';
+		$usernameError = 'Invalid username.';
 	elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) // validate email
-		$emailExistsError = 'Invalid email.';
+		$emailError = 'Invalid email.';
 	elseif (!preg_match("/^[0-9+\- ]{7,20}$/", $phone)) // validate phone
-		$phoneExistsError = 'Invalid phone.';
+		$phoneNumError = 'Invalid phone.';
 	else {
 		// Check duplicates
 		$stmt = $UserDBConnect->prepare("SELECT username, email, phone FROM Users WHERE username=? OR email=? OR phone=?");
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 		if ($result->num_rows > 0) { //duplicate info found in DB
 			while ($row = $result->fetch_assoc()) {
 				if ($row['username'] === $username)
-					$usernameExistsError = "Account with provided username already exists!";
+					$usernameError = "Account with provided username already exists!";
 				if ($row['email'] === $email)
-					$emailExistsError = "Account with provided email already exists!";
+					$emailError = "Account with provided email already exists!";
 				if ($row['phone'] === $phone)
-					$phoneExistsError = "Account with provided phone number already exists!";
+					$phoneNumError = "Account with provided phone number already exists!";
 			}
 		} else { // insert new user
 			// Insert new user
@@ -73,38 +73,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signUp'])) { //if sig
 			);
 			$stmt->bind_param("ssssss", $username, $hashedPassword, $firstName, $lastName, $email, $phone);
 			if ($stmt->execute())
-				$signupSuccess = "Signup successful! You can now log in.";
+				$signupStatus = "Signup successful! You can now log in.";
 			else
-				$signupSuccess = "Error signing up.";
+				$signupStatus = "Error signing up.";
 		}
 		$stmt->close();
 	}
 
 	// Store messages in session and redirect (PRG)
-	$_SESSION['signupSuccess'] = $signupSuccess;
-	$_SESSION['usernameExistsError'] = $usernameExistsError;
-	$_SESSION['emailExistsError'] = $emailExistsError;
-	$_SESSION['phoneExistsError'] = $phoneExistsError;
+	$_SESSION['signupStatus'] = $signupStatus;
+	$_SESSION['usernameError'] = $usernameError;
+	$_SESSION['emailError'] = $emailError;
+	$_SESSION['phoneNumError'] = $phoneNumError;
 	header("Location: " . $_SERVER['PHP_SELF']);
 	exit;
 }
 
 // Retrieve signup messages (get stage of PRG)
-if (isset($_SESSION['signupSuccess'])) { //success message
-	$signupSuccess = $_SESSION['signupSuccess'];
-	unset($_SESSION['signupSuccess']);
+if (isset($_SESSION['signupStatus'])) { //signup status message
+	$signupStatus = $_SESSION['signupStatus'];
+	unset($_SESSION['signupStatus']);
 }
-if (isset($_SESSION['usernameExistsError'])) { // username error
-	$usernameExistsError = $_SESSION['usernameExistsError'];
-	unset($_SESSION['usernameExistsError']);
+if (isset($_SESSION['usernameError'])) { // username error
+	$usernameError = $_SESSION['usernameError'];
+	unset($_SESSION['usernameError']);
 }
-if (isset($_SESSION['emailExistsError'])) { // email error
-	$emailExistsError = $_SESSION['emailExistsError'];
-	unset($_SESSION['emailExistsError']);
+if (isset($_SESSION['emailError'])) { // email error
+	$emailError = $_SESSION['emailError'];
+	unset($_SESSION['emailError']);
 }
-if (isset($_SESSION['phoneExistsError'])) { // phone error
-	$phoneExistsError = $_SESSION['phoneExistsError'];
-	unset($_SESSION['phoneExistsError']);
+if (isset($_SESSION['phoneNumError'])) { // phone error
+	$phoneNumError = $_SESSION['phoneNumError'];
+	unset($_SESSION['phoneNumError']);
 }
 
 // -------- LOGIN LOGIC (PRG) --------
@@ -181,12 +181,12 @@ $UserDBConnect->close();
 		</div>
 
 		<h2>Sign Up</h2>
-		<?php if ($signupSuccess)
-			echo "<div class='success'>$signupSuccess</div>"; ?>
+		<?php if ($signupStatus)
+			echo "<div>$signupStatus</div>"; ?>
 		<form method="post">
 			Username: <input type="text" name="signup_username" required><br>
-			<div class="error"><?php if ($usernameExistsError)
-				echo $usernameExistsError; ?></div>
+			<div class="error"><?php if ($usernameError)
+				echo $usernameError; ?></div>
 
 			Password: <input type="password" name="signup_password" required><br>
 			Confirm Password: <input type="password" name="signup_confirm_password" required><br>
@@ -195,12 +195,12 @@ $UserDBConnect->close();
 			Last Name: <input type="text" name="lastName" required><br>
 
 			Email: <input type="email" name="email" required><br>
-			<div class="error"><?php if ($emailExistsError)
-				echo $emailExistsError; ?></div>
+			<div class="error"><?php if ($emailError)
+				echo $emailError; ?></div>
 
 			Phone: <input type="text" name="phone" required><br>
-			<div class="error"><?php if ($phoneExistsError)
-				echo $phoneExistsError; ?></div>
+			<div class="error"><?php if ($phoneNumError)
+				echo $phoneNumError; ?></div>
 
 			<input type="submit" name="signUp" value="Sign Up"><br><br>
 		</form>
