@@ -4,7 +4,7 @@
 $host = "127.0.0.1";
 $user = "root";
 $pass = "";
-$dbname = "Comp440MarketplaceWebsite";
+$dbname = "Comp440SocialNetworkWebsite";
 
 // Enable mysqli exceptions
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
