@@ -17,3 +17,20 @@ CREATE TABLE IF NOT EXISTS Users (
   phone VARCHAR(20) UNIQUE,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS Blogs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL,
+  subject VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  tags VARCHAR(50) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (username) REFERENCES Users(username)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+-- Use later for blog count limit
+SELECT username, COUNT(*) AS blog_count
+FROM Blogs
+WHERE DATE(created_at) = CURDATE()
+GROUP BY username;
