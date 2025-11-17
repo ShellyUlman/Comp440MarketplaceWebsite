@@ -1,0 +1,74 @@
+.error { color: red; margin: 5px 0; }
+.error:empty {display: none; }
+.success { color: green; margin: 5px 0; }
+.container {
+    width: 800px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
+    display: flex;
+    justify-content: center;
+
+    font-family: Garamond, serif;
+}
+.container form {
+    width: 100%;
+    padding: 50px;
+    
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+.container form input[type="text"],
+.container form input[type="password"],
+.container form input[type="email"] {
+    padding: 8px;
+    margin-bottom: 10px;
+    
+    background-color: #f2efefff;
+    border: 1px solid #ccc;
+
+    font-family: Garamond, serif;
+    font-weight: bold;
+}
+.container form input[type="submit"] {
+    align-self: center;
+    width: 50%;
+    padding: 8px;
+    margin-top: 10px; 
+
+    font-family: Garamond, serif;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.signup-btn {
+    border: none;
+    background-image: linear-gradient(to bottom right, #c08552, #c08552);
+    color: white; 
+}
+.login-btn {
+    border: none;
+    background-image: linear-gradient(to bottom right, #f3e9dc, #f3e9dc);
+    color: #c08552; 
+}
+.signup {
+    /*#a1c4fd, #c2e9fb */
+    background-image: linear-gradient(to bottom right, #f3e9dc, #f3e9dc); 
+}
+.login {
+    background-image: linear-gradient(to bottom right, #c08552, #c08552); 
+}
+.signup-header {
+    color: #c08552;
+}
+.login-header {
+    color: #f3e9dc
+}
+h1 {
+    text-align: center;
+}
+body {
+    background-color: #f3e9dc;
+}
