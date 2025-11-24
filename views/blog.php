@@ -27,26 +27,33 @@ unset($_SESSION['search_results'], $_SESSION['search_tag']); // unset after retr
 <head>
     <meta charset="utf-8">
     <title>Blogs</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .section { margin-bottom: 30px; }
-        .blog-card { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-        .success { color: green; }
-        .error { color: red; }
-        .meta { font-size: 0.9em; color: #555; } /* styling for metadata like username and timestamp */
-        .comments { display: none; margin-top: 10px; border-top: 1px dashed #aaa; padding-top: 10px; }
-        .comment { margin-bottom: 5px; }
-        .toggle-btn { margin-top: 10px; cursor: pointer; background-color: #eee; border: 1px solid #ccc; padding: 5px 10px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+    
+</style>
 <body>
-    <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
-    <form method="post" action="../php/blog.php">
-        <button name="logout">Logout</button>
-    </form>
+<main>
+    <aside class="welcome-section">
+        <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
+        <form method="post" action="../php/blog.php">
+            <button class="logout-btn" name="logout">Logout</button>
+        </form>
+    </aside>
+
+    <!-- Search Blogs by Tag Section -->
+<div class="middle-section">
+    <div class="search-section">
+        <h3>Search Blogs by Tag</h3>
+        <form method="post" action="../php/blog.php">
+            <input type="text" name="tag" placeholder="Enter a tag (optional)">
+            <input class="submit-search-btn" type="submit" name="search_tag" value="Search">
+        </form>
+    </div>
+    
 
     <!-- Post New Blog Section -->
-    <div class="section">
+    <div class="blog-section">
         <h3>Post a New Blog</h3>
         <?php if ($blog_submit_status): ?>
             <p class="<?php echo htmlspecialchars($blog_submit_status['type']); ?>">
@@ -60,19 +67,11 @@ unset($_SESSION['search_results'], $_SESSION['search_tag']); // unset after retr
             <textarea name="description" required></textarea><br>
             <label>Tags (comma separated):</label><br>
             <input type="text" name="tags" required><br>
-            <input type="submit" name="post_blog" value="Post Blog">
+            <input class="post-blog-btn" type="submit" name="post_blog" value="Post Blog">
         </form>
     </div>
-
-    <!-- Search Blogs by Tag Section -->
-    <div class="section">
-        <h3>Search Blogs by Tag</h3>
-        <form method="post" action="../php/blog.php">
-            <input type="text" name="tag" placeholder="Enter a tag (optional)">
-            <input type="submit" name="search_tag" value="Search">
-        </form>
-    </div>
-
+</div>    
+</main>
 
     <!-- Display Search Results -->
     <?php if (!empty($search_results)): ?> <!-- if there are search results -->
@@ -107,6 +106,7 @@ unset($_SESSION['search_results'], $_SESSION['search_tag']); // unset after retr
                 </div>
 
                 <!-- COMMENT FORM -->
+                <div class="comment-form">
                 <form method="post" action="../php/blog.php" style="margin-top:10px;">
                     <input type="hidden" name="blog_id" value="<?php echo (int)$blog['blog_id']; ?>">
                     <select name="sentiment" required>
@@ -115,8 +115,9 @@ unset($_SESSION['search_results'], $_SESSION['search_tag']); // unset after retr
                         <option value="negative">Negative</option>
                     </select>
                     <input type="text" name="comment_description" placeholder="Enter comment..." required>
-                    <input type="submit" name="comment_blog" value="Comment">
+                    <input class="comment-submit-btn" type="submit" name="comment_blog" value="Comment">
                 </form>
+                </div>
             </div>
         <?php endforeach; ?>
     <?php elseif ($search_tag && $search_tag !== " "): ?> <!-- if search tag is set but no results -->
@@ -130,7 +131,6 @@ unset($_SESSION['search_results'], $_SESSION['search_tag']); // unset after retr
             <?php echo htmlspecialchars($comment_submit_status['message']); ?>
         </p>
     <?php endif; ?>
-
 
 
 <script src="../public/blog/toggleComments.js"></script> <!-- toggle comments button script -->
