@@ -1,24 +1,4 @@
-.success { 
-    color: green; 
-    background-color: #cbf5dd;
-
-    padding: 8px;
-    width: fit-content;
-
-    font-family: Garamond, serif; 
-    font-weight: bold; 
-}
-.error { 
-    color: red; 
-    background-color: #ffc9bb;
-
-    padding: 8px;
-    width: fit-content;
-
-    font-family: Garamond, serif; 
-    font-weight: bold; 
-}
-
+body { font-family: Garamond, serif; padding: 20px; background-color: #7a8450; }
 /* STYLES FOR LOGIN PAGE */
 .error:empty { display: none; }
 .container {
@@ -89,12 +69,8 @@
 h1 {
     text-align: center;
 }
-body {
-    background-color: #f8efda;
-}
 
 /* STYLES FOR BLOG PAGE */
-body { font-family: Arial, sans-serif; padding: 20px; background-color: #7a8450; }
 main { /* styling for welcome, search, and blog post section */
     display: flex;
     flex-direction: row;
@@ -109,17 +85,18 @@ h3 {
     font-family: Garamond, serif;
     font-weight: bold;
 }
-.middle-section { /* welcome and blog post section */
-    width: 80%;
-    flex-grow: 1;
-    box-sizing: border-box;
-}
 .welcome-section {
     padding: 0px 8px 8px 8px;
     align-self: stretch;
+    max-width: 15%;
             
     height: 500px;
     border-right: 1px solid #d2c7b8;
+}
+.post-blog-section { /* search + blog post section */
+    width: 80%;
+    flex-grow: 1;
+    box-sizing: border-box;
 }
 .blog-section {
     order: 1;
@@ -134,9 +111,10 @@ h3 {
     flex-direction: column;
     width: 100%;
            
-    border-bottom: 1px solid #d2c7b8;
     padding: 0px 8px 8px 8px;
     box-sizing: border-box;
+
+    border-bottom: 1px solid #d2c7b8;
 }
 .blog-section form textarea,
 .blog-section form input[type="text"] {
@@ -174,6 +152,49 @@ h3 {
     font-family: Garamond, serif;
 
 }
+.analytics-section {
+    padding: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: #f8efda;
+    display: none;
+
+    font-family: Garamond, serif;
+}
+.dual-user-section form input[type="text"],
+.most-blogs-section form input[type="date"],
+.x-y-section form input[type="text"],
+.never-post-section form input[type="text"],
+.only-positive-section form input[type="text"],
+.only-negative-section form input[type="text"],
+.receive-negative-section form input[type="text"] {
+    padding: 6px;
+    margin-bottom: 10px;
+
+    background-color: #f2efefff;
+    border: 1px solid #ccc;
+
+    font-family: Garamond, serif;
+    font-weight: bold;
+}
+.dual-user-section form button[type="submit"],
+.most-blogs-section form button[type="submit"],
+.x-y-section form button[type="submit"],
+.never-post-section form button[type="submit"],
+.only-positive-section form button[type="submit"],
+.only-negative-section form button[type="submit"],
+.receive-negative-section form button[type="submit"] {
+    align-self: center; 
+    padding: 6px;
+
+    font-family: Garamond, serif;
+    font-weight: bold;
+    cursor: pointer;
+
+    border: none;
+    background-image: linear-gradient(to bottom right, #7a8450, #7a8450);
+    color: white;
+}
+
 .meta { font-size: 0.9em; color: #555; } /* styling for metadata like username and timestamp */
 .comments { display: none; margin-top: 10px; border-top: 1px dashed #aaa; padding-top: 10px; }
 .comment { margin-bottom: 5px; }
@@ -191,7 +212,7 @@ h3 {
     color: white; 
 }
 .logout-btn, 
-.comment-submit-btn {
+.comment-btn {
     padding: 3px;
 
     font-family: Garamond, serif;
@@ -202,6 +223,14 @@ h3 {
     color: white; 
 }
 .toggle-btn { margin-top: 10px; cursor: pointer; background-color: #eee; border: 1px solid #ccc; padding: 5px 10px; }
-.submit-search-btn { visibility: hidden; }
+.analytics-toggle-btn {
+    margin-top: 10px; 
+    cursor: pointer; 
+    border-bottom: 1px solid #373d20; 
+    padding: 5px 10px; 
 
- 
+    text-align: center;
+    font-family: Garamond, serif;
+    font-weight: bold;
+}
+.submit-search-btn { visibility: hidden; }
